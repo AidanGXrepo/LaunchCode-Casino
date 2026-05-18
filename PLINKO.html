@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Plinko (Balanced Risk)</title>
+<title>Plinko</title>
 
 <style>
 body{
@@ -87,9 +87,9 @@ let chips = 100;
 const pegs = [];
 const rows = 10;
 
-// balanced risk curve (no safe zone)
+// UPDATED MULTIPLIERS (loss in middle, wins on edges)
 const slots = [
-0.3, 0.5, 0.8, 1.2, 1.5, 2.5, 1.5, 1.2, 0.8, 0.5, 0.3
+3.0, 2.0, 1.2, 0.7, 0.4, 0.2, 0.4, 0.7, 1.2, 2.0, 3.0
 ];
 
 let ball = null;
@@ -122,12 +122,10 @@ function drawBoard(){
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // walls
     ctx.fillStyle = "#222";
     ctx.fillRect(0,0,12,canvas.height);
     ctx.fillRect(canvas.width-12,0,12,canvas.height);
 
-    // pegs
     for(let peg of pegs){
         ctx.beginPath();
         ctx.arc(peg.x,peg.y,6,0,Math.PI*2);
@@ -182,7 +180,6 @@ function physics(){
     ball.x += ball.vx;
     ball.y += ball.vy;
 
-    // walls
     if(ball.x < 22){
         ball.x = 22;
         ball.vx *= -0.7;
@@ -193,7 +190,6 @@ function physics(){
         ball.vx *= -0.7;
     }
 
-    // peg collisions (true 50/50 randomness)
     for(let peg of pegs){
 
         let dx = ball.x - peg.x;
@@ -214,7 +210,6 @@ function physics(){
 
     ball.vx *= 0.99;
 
-    // landing
     if(ball.y > canvas.height - 90){
 
         let slotWidth = canvas.width / slots.length;
